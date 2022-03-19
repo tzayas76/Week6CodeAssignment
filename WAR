@@ -1,0 +1,75 @@
+// creating the card game WAR
+// defining our suits
+var suits = ['Hearts', 'Spades', 'Clubs', 'Diamonds']
+// defining our card values
+var values = ['A',1,2,3,4,5,6,7,8,9,10,'J','Q','K']
+
+// creating the function that starts the game.
+function startGame(){
+
+    let deck1 = new Deck(newDeck());
+
+    console.log(deck1)
+// defining how many points are awarded for a tie.
+    let tie = 0;
+
+    deck1.shuffle();
+
+    // defining our players and how many cards they will be dealt in the game.
+    let player1 = new Player(deck1.cards.splice(0,26))
+    let player2 = new Player(deck1.cards.splice(0,26))
+    // this loop defines how each hand is dealt.
+    while (player1.hand.length > 0){
+        let p1 = player1.hand.pop()
+        let p2 = player2.hand.pop()
+        console.log(`p1:${p1.suit}${p1.value}  p2:${p2.suit}${p2.value}`)
+        if(p1.value > p2.value){
+            player1.score++
+        }else if(p1.value < p2.value){
+            player2.score++
+        } else{
+            tie++;
+        }
+    }
+    console.log(`player 1 points: ${player1.score} tie:${tie} player 2 points: ${player2.score}`)
+}
+// defining our Objects
+class Card{
+
+    constructor(suit,value){
+
+        this.suit = suit;
+        this.value = value;
+    }
+}
+// this allows the deck to change order and suit as it would if you were actually shuffling cards
+function newDeck(){
+
+    return suits.flatMap(suit =>{
+        return values.map(value =>{
+            return new Card(suit,value)
+        });
+    });
+}
+// defining our Objects
+class Deck {
+    constructor(cards){
+        this.cards = cards;
+    }
+    shuffle(){
+        this.cards = this.cards.sort(() => Math.random() - 0.5);
+    }
+}
+// this allows the us to have a new card/deck for each turn
+const gameDeck = new Deck (newDeck());
+
+gameDeck.shuffle();
+
+class Player{
+    constructor (cards){
+        this.score = 0;
+        this.hand = cards;
+    }
+}
+
+startGame();
